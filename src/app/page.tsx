@@ -51,7 +51,7 @@ export default function Home() {
         content: msg.content
       }));
       
-      const res = await fetch("http://localhost:8000/api/chat", {
+      const res = await fetch("/api/chat", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -64,8 +64,9 @@ export default function Home() {
       if (!res.ok) throw new Error("API error: " + res.statusText);
       const aiText = await res.text();
       setMessages((prev) => [...prev, { role: "ai", content: aiText }]);
-    } catch (err: any) {
-      setError(err.message || "Unknown error");
+    } catch (error: unknown) {
+      const errorMessage = error instanceof Error ? error.message : 'Unknown error';
+      setError(errorMessage);
     } finally {
       setLoading(false);
     }
